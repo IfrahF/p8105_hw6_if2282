@@ -5,3 +5,97 @@ date: "12/3/2021"
 output: github_document
 ---
 
+#### Loading required libraries:
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(rvest)
+```
+
+## Problem 1
+
+```{r, message=FALSE, warning=FALSE}
+prob1 = 
+  read_csv("./data/birthweight.csv") %>%
+  mutate(babysex = as.factor(babysex)) %>%
+  mutate(frace = as.factor(frace)) %>%
+  mutate(malform = as.factor(malform)) %>%
+  mutate(mrace = as.factor(mrace))
+
+sum(is.na(prob1))
+```
+
+As the total number of missing values is ``r sum(is.na(prob1))``, we know that there are no missing values in the dataset.
+
+#### Proposed Regression Analysis:
+
+For the regression analysis, I will first check which variables show a crude associated with `birthweight` and then add them into a multivariable model to assess significant predictors of `birthweight`.
+
+**Crude Analysis:**
+
+```{r, message=FALSE, warning=FALSE}
+
+```
+
+**Multivariable Analysis:**
+
+```{r, message=FALSE, warning=FALSE}
+
+```
+
+#### Model 1:
+
+```{r, message=FALSE, warning=FALSE}
+fit1 = lm(bwt ~ blength + gaweeks, data = prob1)
+
+fit1 %>%
+  broom::tidy() %>%
+  select(term, estimate, p.value) %>%
+  mutate(term = str_replace(term, "blength", "Baby's Length (cm)")) %>%
+  mutate(term = str_replace(term, "gaweeks", "Gestational Age (weeks)")) %>%
+  knitr::kable(digits = 2) 
+```
+
+
+#### Model 2:
+
+```{r, message=FALSE, warning=FALSE}
+prob1 = prob1 %>%
+  mutate(babysex = fct_infreq(babysex))
+
+fit2 = lm(bwt ~ bhead * blength * babysex, data = prob1)
+
+fit2 %>%
+  broom::tidy() %>%
+  select(term, estimate, p.value) %>%
+  mutate(term = str_replace(term, "bhead", "Head Circumference (cm)")) %>%
+  mutate(term = str_replace(term, "blength", "Baby's Length (cm)")) %>%
+  mutate(term = str_replace(term, "babysex2", "Female")) %>%
+  mutate(term = str_replace(term, ":", " x ")) %>%
+  mutate(term = str_replace(term, ":", " x ")) %>%
+  knitr::kable(digits = 2)
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+
+```
